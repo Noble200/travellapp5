@@ -31,24 +31,9 @@
             <Border Grid.Column="0" Classes="admin-sidebar">
                 <StackPanel>
                     
-                    <!-- Logo Allva con IMAGEN -->
+                    <!-- Logo Allva -->
                     <Border Classes="admin-logo-container">
-                        <StackPanel Spacing="8" HorizontalAlignment="Center">
-                            <!-- IMAGEN DEL LOGO -->
-                            <Image Source="/Assets/allva-logo.png" 
-                                   Width="100" 
-                                   Height="100"
-                                   Stretch="Uniform"
-                                   HorizontalAlignment="Center"/>
-                            
-                            <!-- Texto Allva -->
-                            <TextBlock Text="Allva"
-                                       FontSize="28"
-                                       FontWeight="Bold"
-                                       Foreground="#0b5394"
-                                       TextAlignment="Center"
-                                       HorizontalAlignment="Center"/>
-                        </StackPanel>
+                        <TextBlock Classes="admin-logo-text"/>
                     </Border>
 
                     <!-- Separador -->

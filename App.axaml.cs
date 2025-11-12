@@ -16,7 +16,6 @@ namespace Allva.Desktop
     public partial class App : Application
     {
         public static IServiceProvider? Services { get; private set; }
-        private static Window? _mainWindow;
 
         public override void Initialize()
         {
@@ -25,26 +24,33 @@ namespace Allva.Desktop
 
         public override void OnFrameworkInitializationCompleted()
         {
+            // ============================================
+            // VELOPACK: Debe ser lo PRIMERO
+            // ============================================
             VelopackApp.Build().Run();
+
+            // Configurar servicios
             ConfigureServices();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var licenseService = new LicenseService();
 
+                // VERIFICAR SI LA APP ESTÁ ACTIVADA
                 if (!licenseService.EstaActivada())
                 {
+                    // NO ACTIVADA - Mostrar ventana de activación EN PANTALLA COMPLETA
                     var licenseView = new LicenseActivationView
                     {
                         DataContext = new LicenseActivationViewModel(),
-                        WindowState = WindowState.Maximized
+                        WindowState = WindowState.Maximized  // ← PANTALLA COMPLETA
                     };
 
                     desktop.MainWindow = licenseView;
-                    _mainWindow = licenseView;
                 }
                 else
                 {
+                    // YA ACTIVADA - Ir directo al login EN PANTALLA COMPLETA
                     var loginView = new LoginView
                     {
                         DataContext = new LoginViewModel()
@@ -53,7 +59,7 @@ namespace Allva.Desktop
                     var mainWindow = new Window
                     {
                         Title = "Allva System - Login",
-                        WindowState = WindowState.Maximized,
+                        WindowState = WindowState.Maximized,  // ← PANTALLA COMPLETA
                         WindowStartupLocation = WindowStartupLocation.CenterScreen,
                         CanResize = true,
                         Content = loginView,
@@ -61,8 +67,8 @@ namespace Allva.Desktop
                     };
 
                     desktop.MainWindow = mainWindow;
-                    _mainWindow = mainWindow;
                     
+                    // Verificar actualizaciones en segundo plano
                     Task.Run(CheckForUpdatesInBackground);
                 }
             }
@@ -96,26 +102,12 @@ namespace Allva.Desktop
 
                 if (updateInfo != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"🔄 Actualización disponible: {updateInfo.TargetFullRelease.Version}");
-                    
-                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
-                    {
-                        if (_mainWindow != null)
-                        {
-                            var viewModel = new UpdateNotificationViewModel(updateInfo, updateService);
-                            var dialog = new UpdateNotificationView(viewModel);
-                            await dialog.ShowDialog(_mainWindow);
-                        }
-                    });
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"✓ La aplicación está actualizada (v{updateService.CurrentVersion})");
+                    System.Diagnostics.Debug.WriteLine($"Actualización disponible: {updateInfo.TargetFullRelease.Version}");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"❌ Error verificando actualizaciones: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error verificando actualizaciones: {ex.Message}");
             }
         }
 
