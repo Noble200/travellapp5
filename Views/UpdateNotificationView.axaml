@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Allva.Desktop.ViewModels"
+        x:Class="Allva.Desktop.Views.UpdateNotificationView"
+        x:DataType="vm:UpdateNotificationViewModel"
+        Title="Actualización Disponible"
+        Width="500" Height="320"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Border Background="#F5F5F5" Padding="30">
+        <StackPanel Spacing="20">
+            
+            <StackPanel HorizontalAlignment="Center" Spacing="15">
+                <TextBlock Text="🔄" FontSize="48" HorizontalAlignment="Center"/>
+                <TextBlock Text="Actualización Disponible" 
+                           FontSize="24" FontWeight="Bold"
+                           Foreground="#0b5394"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <Border Background="White" CornerRadius="8" Padding="20">
+                <Grid RowDefinitions="Auto,10,Auto">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock Text="Versión actual:" FontSize="14"/>
+                        <TextBlock Text="{Binding VersionActual}" FontSize="14" FontWeight="Bold" Foreground="#666"/>
+                    </StackPanel>
+                    
+                    <TextBlock Grid.Row="1" Text="→" FontSize="20" HorizontalAlignment="Center" Foreground="#0b5394"/>
+                    
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock Text="Nueva versión:" FontSize="14"/>
+                        <TextBlock Text="{Binding VersionNueva}" FontSize="14" FontWeight="Bold" Foreground="#0b5394"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <TextBlock Text="{Binding MensajeEstado}" 
+                       FontSize="13"
+                       Foreground="#666"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"/>
+
+            <ProgressBar Value="{Binding Progreso}" 
+                         Maximum="100"
+                         IsVisible="{Binding Descargando}"
+                         Height="8"
+                         Background="#E0E0E0"
+                         Foreground="#0b5394"/>
+
+            <Grid ColumnDefinitions="*,10,*" IsEnabled="{Binding !Descargando}">
+                <Button Grid.Column="0"
+                        Content="Actualizar Después"
+                        Command="{Binding ActualizarDespuesCommand}"
+                        Background="White"
+                        BorderBrush="#D0D0D0"
+                        BorderThickness="1"
+                        Foreground="#666"
+                        Padding="0,12"
+                        CornerRadius="6"
+                        FontSize="14"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"/>
+                
+                <Button Grid.Column="2"
+                        Content="Actualizar Ahora"
+                        Command="{Binding ActualizarAhoraCommand}"
+                        Background="#0b5394"
+                        Foreground="White"
+                        Padding="0,12"
+                        CornerRadius="6"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"/>
+            </Grid>
+
+            <TextBlock Text="La actualización se aplicará cuando cierre la aplicación"
+                       FontSize="11"
+                       Foreground="#999"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"/>
+
+        </StackPanel>
+    </Border>
+</Window>
